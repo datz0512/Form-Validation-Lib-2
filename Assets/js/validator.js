@@ -28,22 +28,28 @@ function Validator(formSelector) {
 
             var rules = input.getAttribute('rules').split('|');
             for (var rule of rules) {
-                if (rule.includes(':')) {
-                    var ruleInfo = rule.split(':')
+                var ruleInfo;
+                var isRuleHasValue = rule.includes(':');
+
+                if (isRuleHasValue) {
+                    ruleInfo = rule.split(':')
                     rule = ruleInfo[0];
                 }
 
-                if (Array.isArray(formRules[input.name])) {
-                
-                }else{
-                    console.log(rule);
+                var ruleFunction = validatorRules[rule];
+
+                if(isRuleHasValue){
+                    ruleFunction = ruleFunction(ruleInfo[1]);
                 }
-                console.log(rule)
 
-            formRules[input.name] = input.getAttribute('rules');
+                if (Array.isArray(formRules[input.name])) {
+                    formRules[input.name].push(ruleFunction)
+                } else{
+                    formRules[input.name] = [ruleFunction];
+                }
             }
-
-        }// console.log(formRules);
+        } 
+        console.log(formRules);
     }
 }
 
