@@ -32,7 +32,7 @@ function Validator(formSelector) {
                 var isRuleHasValue = rule.includes(':');
 
                 if (isRuleHasValue) {
-                    ruleInfo = rule.split(':')
+                    ruleInfo = rule.split(':');
                     rule = ruleInfo[0];
                 }
 
@@ -43,7 +43,7 @@ function Validator(formSelector) {
                 }
 
                 if (Array.isArray(formRules[input.name])) {
-                    formRules[input.name].push(ruleFunction)
+                    formRules[input.name].push(ruleFunction);
                 } else{
                     formRules[input.name] = [ruleFunction];
                 }
