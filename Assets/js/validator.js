@@ -30,15 +30,20 @@ function Validator(formSelector) {
             for (var rule of rules) {
                 if (rule.includes(':')) {
                     var ruleInfo = rule.split(':')
-                    console.log(ruleInfo);
+                    rule = ruleInfo[0];
                 }
-                console.log(rule);
-            }
+
+                if (Array.isArray(formRules[input.name])) {
+                
+                }else{
+                    console.log(rule);
+                }
+                console.log(rule)
 
             formRules[input.name] = input.getAttribute('rules');
-        }
+            }
 
-        // console.log(formRules);
+        }// console.log(formRules);
     }
 }
 
