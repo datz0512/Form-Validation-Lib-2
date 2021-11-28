@@ -59,6 +59,7 @@ function Validator(formSelector) {
             }
 
             input.onblur = handleValidate;
+            input.oninput = handleClearError;
 
         } 
 
@@ -74,12 +75,21 @@ function Validator(formSelector) {
             if(errorMessage){
                 var formGroup = getParent(event.target, '.form-group');
                 if(formGroup){
-                    formGroup.classList.add('invalid')
+                    formGroup.classList.add('invalid');
                     var formMessage = formGroup.querySelector('.form-message');
                     if(formMessage){
                         formMessage.innerText = errorMessage;
                     }
                 }
+            }
+        }
+
+        function handleClearError(event){
+            var formGroup = getParent(event.target, '.form-group');
+            var formMessage = formGroup.querySelector('.form-message');
+            if(formGroup.classList.contains('invalid')){
+                formGroup.classList.remove('invalid');
+                formMessage.innerText = '';
             }
         }
     }
