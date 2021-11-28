@@ -1,4 +1,13 @@
 function Validator(formSelector) {
+    function getParent(element, selector){
+        while (element.parentElement) {
+            if(element.parentElement.matches(selector)){
+                return element.parentElement;
+            }
+            element = element.parentElement;
+        }
+    }
+
     var formRules = {};
     var validatorRules = {
         required: function(value) {
@@ -42,14 +51,37 @@ function Validator(formSelector) {
                     ruleFunction = ruleFunction(ruleInfo[1]);
                 }
 
-                if (Array.isArray(formRules[input.name])) {
+                if(Array.isArray(formRules[input.name])) {
                     formRules[input.name].push(ruleFunction);
-                } else{
+                }else{
                     formRules[input.name] = [ruleFunction];
                 }
             }
+
+            input.onblur = handleValidate;
+
         } 
-        console.log(formRules);
+
+        function handleValidate(event){
+            var rules = formRules[event.target.name];
+            var errorMessage ;
+
+            rules.some((rule) => {
+                errorMessage = rule(event.target.value);
+                return errorMessage;
+            })
+            
+            if(errorMessage){
+                var formGroup = getParent(event.target, '.form-group');
+                if(formGroup){
+                    formGroup.classList.add('invalid')
+                    var formMessage = formGroup.querySelector('.form-message');
+                    if(formMessage){
+                        formMessage.innerText = errorMessage;
+                    }
+                }
+            }
+        }
     }
 }
 
