@@ -1,4 +1,7 @@
-function Validator(formSelector, options = {}) {
+function Validator(formSelector) {
+    var _this = this;
+    var formRules = {};
+
     function getParent(element, selector){
         while (element.parentElement) {
             if(element.parentElement.matches(selector)){
@@ -8,7 +11,6 @@ function Validator(formSelector, options = {}) {
         }
     }
 
-    var formRules = {};
     var validatorRules = {
         required: function(value) {
             return value.trim() ? undefined : 'Vui lòng nhập trường này';
@@ -65,12 +67,12 @@ function Validator(formSelector, options = {}) {
 
         function handleValidate(event){
             var rules = formRules[event.target.name];
-            var errorMessage ;
+            var errorMessage;
 
-            rules.some((rule) => {
-                errorMessage = rule(event.target.value);
-                return errorMessage;
-            })
+            for(var rule of rules){
+                var errorMessage = rule(event.target.value);
+                if(errorMessage) break;
+            }
             
             if(errorMessage){
                 var formGroup = getParent(event.target, '.form-group');
@@ -107,10 +109,9 @@ function Validator(formSelector, options = {}) {
         }
 
         if(isValid){
-            if(typeof options.onSubmit === 'function'){
+            if(typeof _this.onSubmit === 'function'){
                 var enableInputs = formElement.querySelectorAll('[name]')
                     var formValues = Array.from(enableInputs).reduce((values, input) => {
-                        
                         switch(input.type){
                             case 'radio':
                                 values[input.name] = formElement.querySelector('input[name="' + input.name + '"]:checked').value;
@@ -134,15 +135,14 @@ function Validator(formSelector, options = {}) {
                         return values
                     }, {})
                 alert('Đăng ký thành công');
-                return options.onSubmit(formValues);
+                return _this.onSubmit(formValues);
             }
             formElement.submit()
         }
     }
 }
 
-Validator('#form-1', {
-    onSubmit: (data)=> {
-        console.log(data);
-    }
-});
+var registerForm = new Validator('#form-1');
+registerForm.onSubmit = (data)=> {
+    console.log(data);
+}
