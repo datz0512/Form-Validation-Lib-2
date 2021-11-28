@@ -1,4 +1,4 @@
-function Validator(formSelector) {
+function Validator(formSelector, options = {}) {
     function getParent(element, selector){
         while (element.parentElement) {
             if(element.parentElement.matches(selector)){
@@ -82,6 +82,7 @@ function Validator(formSelector) {
                     }
                 }
             }
+            return !errorMessage;
         }
 
         function handleClearError(event){
@@ -98,12 +99,50 @@ function Validator(formSelector) {
         event.preventDefault();
 
         var inputs = formElement.querySelectorAll('[name][rules]');
+        var isValid = true;
         for (var input of inputs) {
-            handleValidate({
-                target: input
-            });
+            if(!handleValidate({ target: input })){
+                isValid = false;
+            };
+        }
+
+        if(isValid){
+            if(typeof options.onSubmit === 'function'){
+                var enableInputs = formElement.querySelectorAll('[name]')
+                    var formValues = Array.from(enableInputs).reduce((values, input) => {
+                        
+                        switch(input.type){
+                            case 'radio':
+                                values[input.name] = formElement.querySelector('input[name="' + input.name + '"]:checked').value;
+                                break;
+                            case 'checkbox':
+                                if(!input.matches(':checked')){ 
+                                    values[input.name] = [];
+                                    return values
+                                }
+                                if(!Array.isArray(values[input.name])){
+                                    values[input.name] = [];
+                                }
+                                values[input.name].push(input.value)
+
+                                break;
+                            case 'file':
+                                values[input.name] = input.file;
+                            default:
+                                values[input.name] = input.value;
+                        }
+                        return values
+                    }, {})
+                alert('Đăng ký thành công');
+                return options.onSubmit(formValues);
+            }
+            formElement.submit()
         }
     }
 }
 
-Validator('#form-1');
+Validator('#form-1', {
+    onSubmit: (data)=> {
+        console.log(data);
+    }
+});
