@@ -93,6 +93,17 @@ function Validator(formSelector) {
             }
         }
     }
+
+    formElement.onsubmit = (event) => {
+        event.preventDefault();
+
+        var inputs = formElement.querySelectorAll('[name][rules]');
+        for (var input of inputs) {
+            handleValidate({
+                target: input
+            });
+        }
+    }
 }
 
 Validator('#form-1');
