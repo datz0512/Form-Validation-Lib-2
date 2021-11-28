@@ -26,7 +26,7 @@ function Validator(formSelector) {
         },
         max: function(max) {
             return function(value) {
-                return value.length <= max ? undefined : `Vui lòng nhập tối đa ${min} ký tự`;
+                return value.length <= max ? undefined : `Vui lòng nhập tối đa ${max} ký tự`;
             }
         },
     };
